@@ -1,6 +1,6 @@
 # Distribution Guide
 
-This guide describes how to publish and distribute the **ImgPress** CLI tool.
+This guide describes how to publish and distribute the **MicroPng** CLI tool.
 
 ## Prerequisites
 
@@ -37,15 +37,15 @@ This guide describes how to publish and distribute the **ImgPress** CLI tool.
 
 After publishing, verify that the package is accessible:
 
-1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/micropng-cli`.
+1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/micropng`.
 2.  **Test Installation**:
     ```bash
-    npm install -g micropng-cli
-    imgpress --version
+    npm install -g micropng
+    micropng --version
     ```
 3.  **Test NPX**:
     ```bash
-    npx micropng-cli --help
+    npx micropng --help
     ```
 
 ## Standalone Binaries (Experimental)

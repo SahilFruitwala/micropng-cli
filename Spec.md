@@ -4,9 +4,9 @@ This design includes the specific logic for **recursive processing** and **in-pl
 
 ---
 
-# `ImgPress` - High-Performance CLI Image Compressor
+# `MicroPng` - High-Performance CLI Image Compressor
 
-**ImgPress** is a lightning-fast, local CLI tool designed to compress and optimize images recursively across directories. It focuses on performance, privacy, and batch automation using the industrial-grade `libvips` engine.
+**MicroPng** is a lightning-fast, local CLI tool designed to compress and optimize images recursively across directories. It focuses on performance, privacy, and batch automation using the industrial-grade `libvips` engine.
 
 ## 1. Technical Specifications
 

@@ -10,7 +10,7 @@ import { compressImage } from './compressor.js';
 const program = new Command();
 
 program
-  .name('imgpress')
+  .name('micropng')
   .description('High-performance CLI image compressor')
   .version('1.0.0')
   .argument('<input>', 'Input file or directory')

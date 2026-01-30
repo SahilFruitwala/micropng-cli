@@ -1,6 +1,6 @@
-# Contributing to ImgPress
+# Contributing to MicroPng CLI
 
-Thank you for your interest in contributing to ImgPress! We welcome contributions from the community.
+Thank you for your interest in contributing to MicroPng! We welcome contributions from the community.
 
 ## Development Setup
 

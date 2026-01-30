@@ -1,5 +1,5 @@
 {
-  "name": "micropng-cli",
+  "name": "micropng",
   "version": "1.0.0",
   "description": "High-performance CLI image compressor using sharp and libvips",
   "files": [
@@ -9,7 +9,7 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "imgpress": "./dist/index.js"
+    "micropng": "./dist/index.js"
   },
   "scripts": {
     "build": "tsup",

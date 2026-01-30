@@ -1,4 +1,4 @@
-# ImgPress CLI
+# MicroPng CLI
 
 A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Supports recursive processing, atomic overwrites, and format conversion.
 
@@ -16,16 +16,16 @@ A high-performance, local-first CLI image compressor built with Node.js and libv
 
 ### For Users
 
-You can run **ImgPress** directly without installation using `npx`:
+You can run **MicroPng** directly without installation using `npx`:
 
 ```bash
-npx micropng-cli --help
+npx micropng --help
 ```
 
-Or install it globally to use the `imgpress` command anywhere:
+Or install it globally to use the `micropng` command anywhere:
 
 ```bash
-npm install -g micropng-cli
+npm install -g micropng
 ```
 
 ### For Developers
@@ -39,13 +39,13 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for local development setup.
 Compress a single file:
 
 ```bash
-imgpress input.png --output compressed.png
+micropng input.png --output compressed.png
 ```
 
 Compress a directory of images:
 
 ```bash
-imgpress ./images --output ./compressed-images
+micropng ./images --output ./compressed-images
 ```
 
 ### Recursive Processing
@@ -53,7 +53,7 @@ imgpress ./images --output ./compressed-images
 Process all images in a folder and its subfolders, maintaining the directory structure:
 
 ```bash
-imgpress ./photos --recursive --output ./optimized-photos
+micropng ./photos --recursive --output ./optimized-photos
 ```
 
 ### In-Place Replacement (Overwrite)
@@ -63,7 +63,7 @@ imgpress ./photos --recursive --output ./optimized-photos
 Compress and overwrite images in-place safely:
 
 ```bash
-imgpress ./project-assets --recursive --replace
+micropng ./project-assets --recursive --replace
 ```
 
 ### Format Conversion
@@ -71,7 +71,7 @@ imgpress ./project-assets --recursive --replace
 Convert all PNGs to WebP:
 
 ```bash
-imgpress ./images --format webp --output ./webp-images --recursive
+micropng ./images --format webp --output ./webp-images --recursive
 ```
 
 ### Options
