@@ -66,4 +66,13 @@ describe('CLI Integration', () => {
     // In some fast systems/filesystems mtime might be same, so let's check if it's still a valid image
     expect(fs.existsSync(imgPath)).toBe(true);
   });
+
+  it('should honor ignore patterns', () => {
+    const outputDir = path.resolve('it-output');
+    // Ignore images in 'nested' folder
+    execSync(`node ${CLI_PATH} ${TEST_DIR} --output ${outputDir} --recursive --ignore "**/nested/**"`);
+    
+    expect(fs.existsSync(path.join(outputDir, 'img1.png'))).toBe(true);
+    expect(fs.existsSync(path.join(outputDir, 'nested', 'img2.png'))).toBe(false);
+  });
 });
