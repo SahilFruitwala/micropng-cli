@@ -79,4 +79,35 @@ describe('compressor.ts', () => {
     const newMetadata = await sharp(input).metadata();
     expect(newMetadata.width).toBe(100);
   });
+
+  it('should NOT perform in-place replacement if compressed is larger', async () => {
+    // Create a very small image
+    const input = path.join(TEST_DIR, 'small.png');
+    await sharp({
+      create: {
+        width: 1,
+        height: 1,
+        channels: 4,
+        background: { r: 255, g: 0, b: 0, alpha: 1 }
+      }
+    })
+    .png()
+    .toFile(input);
+
+    const originalStats = await fs.stat(input);
+    const originalContent = await fs.readFile(input);
+    
+    // Attempt compression with ridiculous quality or settings that might increase size
+    // For a 1x1 image, any compression might increase size due to additional metadata/optimization
+    const result = await compressImage(input, input, { replace: true, quality: 100 });
+    
+    expect(result.replaced).toBe(false);
+    
+    const newStats = await fs.stat(input);
+    const newContent = await fs.readFile(input);
+    
+    // Stats and content should be identical since it wasn't replaced
+    expect(newStats.size).toBe(originalStats.size);
+    expect(newContent).toEqual(originalContent);
+  });
 });

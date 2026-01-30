@@ -20,7 +20,7 @@ npm run build
 npm link
 
 # Now you can use it anywhere
-micropng --help
+micropng-cli --help
 ```
 
 To remove the link:

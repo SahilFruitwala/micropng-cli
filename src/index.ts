@@ -5,6 +5,7 @@ import pLimit from 'p-limit';
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import cliProgress from 'cli-progress';
 import { compressImage } from './compressor.js';
 
 const program = new Command();
@@ -16,7 +17,7 @@ program
   .argument('<input>', 'Input file or directory')
   .option('-o, --output <dir>', 'Output directory')
   .option('-r, --recursive', 'Process subfolders deeply')
-  .option('--replace', 'OVERWRITE original files (Caution!)')
+  .option('--replace', 'Replace original files ONLY if compressed is smaller')
   .option('-q, --quality <number>', 'Compression quality (1-100)', '80')
   .option('-w, --width <number>', 'Resize width in pixels')
   .option('-f, --format <type>', 'Output format (jpeg, png, webp, avif)')
@@ -46,9 +47,23 @@ program
 
       console.log(chalk.blue(`Found ${files.length} images. Processing...`));
 
+      const progressBar = new cliProgress.SingleBar({
+        format: 'Progress |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Files || ETA: {eta}s',
+        barCompleteChar: '\u2588',
+        barIncompleteChar: '\u2591',
+        hideCursor: true
+      });
+
+      progressBar.start(files.length, 0);
+
       const limit = pLimit(parseInt(options.concurrency));
       const quality = parseInt(options.quality);
       const width = options.width ? parseInt(options.width) : undefined;
+
+      let totalSaved = 0;
+      let totalOriginal = 0;
+      let processedCount = 0;
+      let failedCount = 0;
 
       const tasks = files.map((filePath) =>
         limit(async () => {
@@ -76,22 +91,41 @@ program
               outputPath = path.join(dirname, `${name}_compressed${targetExt}`);
             }
 
-            await compressImage(filePath, outputPath, {
+            const result = await compressImage(filePath, outputPath, {
               quality,
               width,
               format: options.format,
               replace: options.replace,
             });
 
-            console.log(chalk.green(`✓ Processed: ${path.relative(process.cwd(), filePath)}`));
+            totalSaved += result.saved;
+            totalOriginal += result.inputSize;
+            processedCount++;
           } catch (err: any) {
-            console.error(chalk.red(`✗ Failed: ${filePath} - ${err.message}`));
+            failedCount++;
+            // We don't want to break the progress bar with console.error here
+            // but we might want to log it after the bar finishes
+          } finally {
+            progressBar.increment();
           }
         })
       );
 
       await Promise.all(tasks);
+      progressBar.stop();
+
       console.log(chalk.bold.cyan('\nCompression complete!'));
+      
+      if (processedCount > 0) {
+        const savedMB = (totalSaved / (1024 * 1024)).toFixed(2);
+        const percentSaved = ((totalSaved / totalOriginal) * 100).toFixed(1);
+        console.log(chalk.green(`✓ Successfully processed ${processedCount} images.`));
+        console.log(chalk.green(`Total space saved: ${savedMB} MB (${percentSaved}%)`));
+      }
+      
+      if (failedCount > 0) {
+        console.log(chalk.red(`✗ Failed to process ${failedCount} images.`));
+      }
     } catch (err: any) {
       console.error(chalk.red.bold(`Error: ${err.message}`));
       process.exit(1);
