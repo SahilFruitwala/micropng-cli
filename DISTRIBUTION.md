@@ -25,7 +25,7 @@ micropng --help
 
 To remove the link:
 ```bash
-npm unlink -g micropng
+npm unlink -g micropng-cli
 ```
 
 ### 2. Global Install from Path
@@ -82,15 +82,15 @@ node ./dist/index.js --help
 
 After publishing, verify that the package is accessible:
 
-1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/micropng`.
+1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/micropng-cli`.
 2.  **Test Installation**:
     ```bash
-    npm install -g micropng
-    micropng --version
+    npm install -g micropng-cli
+    micropng-cli --version
     ```
 3.  **Test NPX**:
     ```bash
-    npx micropng --help
+    npx micropng-cli --help
     ```
 
 ## Standalone Binaries (Experimental)

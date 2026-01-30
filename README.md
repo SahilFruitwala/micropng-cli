@@ -19,13 +19,13 @@ A high-performance, local-first CLI image compressor built with Node.js and libv
 You can run **MicroPng** directly without installation using `npx`:
 
 ```bash
-npx micropng --help
+npx micropng-cli --help
 ```
 
 Or install it globally to use the `micropng` command anywhere:
 
 ```bash
-npm install -g micropng
+npm install -g micropng-cli
 ```
 
 ### For Developers
@@ -39,13 +39,13 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for local development setup.
 Compress a single file:
 
 ```bash
-micropng input.png --output compressed.png
+micropng-cli input.png --output compressed.png
 ```
 
 Compress a directory of images:
 
 ```bash
-micropng ./images --output ./compressed-images
+micropng-cli ./images --output ./compressed-images
 ```
 
 ### Recursive Processing
@@ -53,7 +53,7 @@ micropng ./images --output ./compressed-images
 Process all images in a folder and its subfolders, maintaining the directory structure:
 
 ```bash
-micropng ./photos --recursive --output ./optimized-photos
+micropng-cli ./photos --recursive --output ./optimized-photos
 ```
 
 ### In-Place Replacement (Overwrite)
@@ -63,7 +63,7 @@ micropng ./photos --recursive --output ./optimized-photos
 Compress and overwrite images in-place safely:
 
 ```bash
-micropng ./project-assets --recursive --replace
+micropng-cli ./project-assets --recursive --replace
 ```
 
 ### Format Conversion
@@ -71,7 +71,7 @@ micropng ./project-assets --recursive --replace
 Convert all PNGs to WebP:
 
 ```bash
-micropng ./images --format webp --output ./webp-images --recursive
+micropng-cli ./images --format webp --output ./webp-images --recursive
 ```
 
 ### Options

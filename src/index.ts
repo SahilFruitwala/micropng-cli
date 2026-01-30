@@ -10,9 +10,9 @@ import { compressImage } from './compressor.js';
 const program = new Command();
 
 program
-  .name('micropng')
+  .name('micropng-cli')
   .description('High-performance CLI image compressor')
-  .version('1.0.0')
+  .version('0.1.0')
   .argument('<input>', 'Input file or directory')
   .option('-o, --output <dir>', 'Output directory')
   .option('-r, --recursive', 'Process subfolders deeply')
