@@ -7,6 +7,51 @@ This guide describes how to publish and distribute the **MicroPng** CLI tool.
 -   An **NPM** account (`npmjs.com`).
 -   Access to the package name (if already published).
 
+## Local Testing
+
+Before publishing to NPM, you can test the CLI tool locally using several methods:
+
+### 1. NPM Link (Recommended)
+This makes the `micropng` command available globally on your machine, pointing to your local development folder.
+
+```bash
+# In the project root
+npm run build
+npm link
+
+# Now you can use it anywhere
+micropng --help
+```
+
+To remove the link:
+```bash
+npm unlink -g micropng
+```
+
+### 2. Global Install from Path
+Similar to `npm link`, but performs a full "install" of the local folder.
+
+```bash
+npm run build
+npm install -g .
+```
+
+### 3. Direct Execution with NPX
+Run the local version without installing it globally.
+
+```bash
+npm run build
+npx . --help
+```
+
+### 4. Direct Node Execution
+Useful for debugging specific scripts in `dist/`.
+
+```bash
+npm run build
+node ./dist/index.js --help
+```
+
 ## Publishing to NPM
 
 1.  **Login to NPM**
