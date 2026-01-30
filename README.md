@@ -84,7 +84,7 @@ micropng-cli ./images --format webp --output ./webp-images --recursive
 | `--recursive` | `-r` | Process subfolders deeply | `false` |
 | `--replace` | | Overwrite original files | `false` |
 | `--quality <number>` | `-q` | Compression quality (1-100) | `80` |
-| `--width <number>` | `-w` | Resize width in pixels | (Original) |
+
 | `--format <type>` | `-f` | Output format (jpeg, png, webp, avif) | (Original) |
 | `--concurrency <number>` | `-c` | Number of concurrent tasks | `5` |
 

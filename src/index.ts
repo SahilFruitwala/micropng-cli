@@ -21,7 +21,7 @@ program
   .option('-r, --recursive', 'Process subfolders deeply')
   .option('--replace', 'Replace original files ONLY if compressed is smaller')
   .option('-q, --quality <number>', 'Compression quality (1-100)', '80')
-  .option('-w, --width <number>', 'Resize width in pixels')
+
   .option('-f, --format <type>', 'Output format (jpeg, png, webp, avif)')
   .option('-c, --concurrency <number>', 'Number of concurrent tasks', '5')
   .action(async (input, options) => {
@@ -58,7 +58,7 @@ program
 
       const limit = pLimit(parseInt(options.concurrency));
       const quality = parseInt(options.quality);
-      const width = options.width ? parseInt(options.width) : undefined;
+
 
       // Start the progress bar in indeterminate mode while scanning
       progressBar.start(0, 0, { file: 'Scanning...', saved: '0.00' });
@@ -99,7 +99,7 @@ program
 
             const result = await compressImage(filePath, outputPath, {
               quality,
-              width,
+
               format: options.format,
               replace: options.replace,
             });

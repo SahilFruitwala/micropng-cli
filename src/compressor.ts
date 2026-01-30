@@ -5,7 +5,7 @@ import chalk from 'chalk';
 
 export interface CompressionOptions {
   quality?: number;
-  width?: number;
+
   format?: 'jpeg' | 'png' | 'webp' | 'avif';
   replace?: boolean;
 }
@@ -22,16 +22,14 @@ export async function compressImage(
   outputPath: string,
   options: CompressionOptions
 ): Promise<CompressionResult> {
-  const { quality = 80, width, format } = options;
+  const { quality = 80, format } = options;
 
   const inputStats = await fs.stat(inputPath);
   const inputSize = inputStats.size;
 
   let pipeline = sharp(inputPath);
 
-  if (width) {
-    pipeline = pipeline.resize(width);
-  }
+
 
   // Determine target format
   const ext = path.extname(inputPath).toLowerCase();

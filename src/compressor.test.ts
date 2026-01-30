@@ -46,15 +46,7 @@ describe('compressor.ts', () => {
     // but the output existence is high signal.
   });
 
-  it('should resize the image if width is provided', async () => {
-    const input = path.join(FIXTURES_DIR, 'test.png');
-    const output = path.join(TEST_DIR, 'resized.png');
-    
-    await compressImage(input, output, { width: 50 });
-    
-    const metadata = await sharp(output).metadata();
-    expect(metadata.width).toBe(50);
-  });
+
 
   it('should convert format if requested', async () => {
     const input = path.join(FIXTURES_DIR, 'test.png');
