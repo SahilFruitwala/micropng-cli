@@ -3,8 +3,7 @@
 A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Designed for developers who need fast, reliable, and recursive image optimization without sending data to a cloud service.
 
 [![npm version](https://img.shields.io/npm/v/micropng-cli.svg)](https://www.npmjs.com/package/micropng-cli)
-[![Build Status](https://github.com/SahilFruitwala/micropng-cli/actions/workflows/release.yml/badge.svg)](https://github.com/SahilFruitwala/micropng-cli/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## 🚀 Features
 
