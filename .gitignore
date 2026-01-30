@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+bin/
+
+# Tests & Coverage
+coverage/
+test-temp/
+test-fixtures/
+it-test-dir/
+it-output/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# Tsup
+.tsup/
