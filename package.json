@@ -1,8 +1,8 @@
 {
-  "name": "@sahilfruitwala/micropng-cli",
-  "version": "0.2.1",
+  "name": "@sahil_fruitwala/micropng-cli",
+  "version": "0.2.2",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "repository": {
     "type": "git",

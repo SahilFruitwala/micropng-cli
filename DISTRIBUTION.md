@@ -25,7 +25,7 @@ micropng-cli --help
 
 To remove the link:
 ```bash
-npm unlink -g micropng-cli
+npm unlink -g @sahil_fruitwala/micropng-cli
 ```
 
 ### 2. Global Install from Path
@@ -82,15 +82,15 @@ node ./dist/index.js --help
 
 After publishing, verify that the package is accessible:
 
-1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/micropng-cli`.
+1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/@sahil_fruitwala/micropng-cli`.
 2.  **Test Installation**:
     ```bash
-    npm install -g micropng-cli
+    npm install -g @sahil_fruitwala/micropng-cli
     micropng-cli --version
     ```
 3.  **Test NPX**:
     ```bash
-    npx micropng-cli --help
+    npx @sahil_fruitwala/micropng-cli --help
     ```
 
 ## Automating with GitHub Actions
@@ -110,14 +110,14 @@ The distribution process is automated using GitHub Actions. The workflow is defi
 
 To enable automated publishing, follow these steps:
 
-1.  **Generate an NPM Access Token**:
-    -   Go to [npmjs.com](https://www.npmjs.com/).
-    -   Navigate to **Access Tokens** > **Generate New Token** (Classic Token).
-    -   Select **Automation** type.
-2.  **Add Secret to GitHub**:
-    -   Go to your repository on GitHub.
-    -   Navigate to **Settings** > **Secrets and variables** > **Actions**.
-    -   Create a **New repository secret** named `NPM_TOKEN` and paste your token.
+1.  **Configure Trusted Publishing**:
+    -   Go to [npmjs.com](https://www.npmjs.com/) and navigate to your package settings.
+    -   Go to **Settings** > **Publishing access**.
+    -   Connect a **GitHub Actions** new publisher.
+    -   Select this repository (`SahilFruitwala/micropng-cli`) and the `release.yml` workflow file.
+    -   Ensure it's configured to publish from the `release` environment or relevant branch/tag rules.
+2.  **No Secrets Needed**:
+    -   With Trusted Publishing, you **do not** need to add an `NPM_TOKEN` to your GitHub secrets. The workflow authenticates securely using OIDC.
 
 ### Triggering a Release
 

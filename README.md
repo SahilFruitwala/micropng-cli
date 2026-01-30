@@ -1,8 +1,8 @@
-# MicroPng CLI (v0.2.1)
+# MicroPng CLI (v0.2.2)
 
 A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Supports recursive processing, atomic overwrites, and format conversion.
 
-[![npm version](https://img.shields.io/npm/v/@sahilfruitwala/micropng-cli.svg)](https://www.npmjs.com/package/@sahilfruitwala/micropng-cli)
+[![npm version](https://img.shields.io/npm/v/@sahil_fruitwala/micropng-cli.svg)](https://www.npmjs.com/package/@sahil_fruitwala/micropng-cli)
 [![Build Status](https://github.com/SahilFruitwala/micropng-cli/actions/workflows/release.yml/badge.svg)](https://github.com/SahilFruitwala/micropng-cli/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -21,13 +21,13 @@ A high-performance, local-first CLI image compressor built with Node.js and libv
 You can run **MicroPng** directly without installation using `npx`:
 
 ```bash
-npx @sahilfruitwala/micropng-cli --help
+npx @sahil_fruitwala/micropng-cli --help
 ```
 
 Or install it globally to use the `micropng` command anywhere:
 
 ```bash
-npm install -g @sahilfruitwala/micropng-cli
+npm install -g @sahil_fruitwala/micropng-cli
 ```
 
 ### For Developers
