@@ -16,7 +16,8 @@
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "build:bin": "tsup && pkg ."
   },
   "keywords": [
     "image-compression",

@@ -93,13 +93,36 @@ After publishing, verify that the package is accessible:
     npx micropng-cli --help
     ```
 
-## Standalone Binaries (Experimental)
+## Automating with GitHub Actions
 
-While we primarily distribute via NPM, you can generate standalone executables using `pkg`:
+The distribution process is automated using GitHub Actions. The workflow is defined in `.github/workflows/release.yml`.
 
-1.  **Configure `pkg`**: Ensure `package.json` has the correct `bin` entry (pointing to CJS) and `pkg` config.
-2.  **Build**:
-    ```bash
-    npm run build:bin
-    ```
-    *Note: This requires specific node target configuration and resolving native dependency issues.*
+### Workflow Features
+
+1.  **Continuous Integration**: Runs `npm test` on every push to `master` and all Pull Requests.
+2.  **Automated Publishing**: When you create a new **GitHub Release**, the workflow will:
+    -   Run tests.
+    -   Publish the package to **NPM**.
+    -   Build standalone binaries.
+    -   Attach the binaries to the GitHub Release.
+
+### Setup Instructions
+
+To enable automated publishing, follow these steps:
+
+1.  **Generate an NPM Access Token**:
+    -   Go to [npmjs.com](https://www.npmjs.com/).
+    -   Navigate to **Access Tokens** > **Generate New Token** (Classic Token).
+    -   Select **Automation** type.
+2.  **Add Secret to GitHub**:
+    -   Go to your repository on GitHub.
+    -   Navigate to **Settings** > **Secrets and variables** > **Actions**.
+    -   Create a **New repository secret** named `NPM_TOKEN` and paste your token.
+
+### Triggering a Release
+
+1.  Update the version in `package.json` and push to `master`.
+2.  Go to the **Releases** section on GitHub.
+3.  Click **Draft a new release**.
+4.  Create a new tag (e.g., `v0.1.0`) and publish the release.
+5.  GitHub Actions will handle the rest!
