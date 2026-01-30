@@ -1,6 +1,14 @@
 {
   "name": "micropng-cli",
   "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SahilFruitwala/micropng-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SahilFruitwala/micropng-cli/issues"
+  },
+  "homepage": "https://github.com/SahilFruitwala/micropng-cli#readme",
   "description": "High-performance CLI image compressor using sharp and libvips",
   "files": [
     "dist",
