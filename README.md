@@ -2,7 +2,9 @@
 
 A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Supports recursive processing, atomic overwrites, and format conversion.
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![npm version](https://img.shields.io/npm/v/micropng-cli.svg)](https://www.npmjs.com/package/micropng-cli)
+[![Build Status](https://github.com/SahilFruitwala/micropng-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/SahilFruitwala/micropng-cli/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
@@ -93,4 +95,4 @@ micropng-cli ./images --format webp --output ./webp-images --recursive
 
 ## License
 
-ISC
+MIT
