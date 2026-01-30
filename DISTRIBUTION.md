@@ -12,7 +12,7 @@ This guide describes how to publish and distribute the **MicroPng** CLI tool.
 Before publishing to NPM, you can test the CLI tool locally using several methods:
 
 ### 1. NPM Link (Recommended)
-This makes the `micropng` command available globally on your machine, pointing to your local development folder.
+This makes the `micropng-cli` command available globally on your machine, pointing to your local development folder.
 
 ```bash
 # In the project root

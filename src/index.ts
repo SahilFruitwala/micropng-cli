@@ -8,12 +8,14 @@ import fs from 'fs-extra';
 import cliProgress from 'cli-progress';
 import { compressImage } from './compressor.js';
 
+const packageJson = fs.readJsonSync(new URL('../package.json', import.meta.url));
+
 const program = new Command();
 
 program
   .name('micropng-cli')
   .description('High-performance CLI image compressor')
-  .version('0.1.0')
+  .version(packageJson.version)
   .argument('<input>', 'Input file or directory')
   .option('-o, --output <dir>', 'Output directory')
   .option('-r, --recursive', 'Process subfolders deeply')
@@ -32,41 +34,46 @@ program
         // fast-glob requires forward slashes even on Windows
         const normalizedInput = inputPath.replace(/\\/g, '/');
         searchPattern = options.recursive
-          ? `${normalizedInput}/**/*.{jpg,jpeg,png,webp}`
-          : `${normalizedInput}/*.{jpg,jpeg,png,webp}`;
+          ? `${normalizedInput}/**/*.{jpg,jpeg,png,webp,avif}`
+          : `${normalizedInput}/*.{jpg,jpeg,png,webp,avif}`;
       } else {
         searchPattern = inputPath.replace(/\\/g, '/');
       }
 
-      const files = await glob(searchPattern, { absolute: true });
+      console.log(chalk.bold.cyan(`Micropng v${packageJson.version}`));
+      console.log(chalk.dim(`Scanning: ${inputPath}\n`));
 
-      if (files.length === 0) {
-        console.log(chalk.yellow('No images found to process.'));
-        return;
-      }
-
-      console.log(chalk.blue(`Found ${files.length} images. Processing...`));
-
+      const files: string[] = [];
       const progressBar = new cliProgress.SingleBar({
-        format: 'Progress |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Files || ETA: {eta}s',
+        format: '{bar} {percentage}% | {value}/{total} Files | {saved}MB',
         barCompleteChar: '\u2588',
         barIncompleteChar: '\u2591',
         hideCursor: true
-      });
-
-      progressBar.start(files.length, 0);
-
-      const limit = pLimit(parseInt(options.concurrency));
-      const quality = parseInt(options.quality);
-      const width = options.width ? parseInt(options.width) : undefined;
+      }, cliProgress.Presets.shades_grey);
 
       let totalSaved = 0;
       let totalOriginal = 0;
       let processedCount = 0;
       let failedCount = 0;
 
-      const tasks = files.map((filePath) =>
-        limit(async () => {
+      const limit = pLimit(parseInt(options.concurrency));
+      const quality = parseInt(options.quality);
+      const width = options.width ? parseInt(options.width) : undefined;
+
+      // Start the progress bar in indeterminate mode while scanning
+      progressBar.start(0, 0, { file: 'Scanning...', saved: '0.00' });
+
+      const stream = glob.stream(searchPattern, { absolute: true });
+      const tasks: Promise<void>[] = [];
+
+      for await (const entry of stream) {
+        const filePath = entry.toString();
+        files.push(filePath);
+        
+        // Update total as we find more files
+        progressBar.setTotal(files.length);
+
+        tasks.push(limit(async () => {
           try {
             let outputPath: string;
             if (options.replace) {
@@ -83,7 +90,6 @@ program
               
               outputPath = path.join(path.resolve(options.output), baseDir, `${name}${targetExt}`);
             } else {
-              // Default to same directory with '_compressed' suffix if not replacing and no output specified
               const ext = path.extname(filePath);
               const name = path.basename(filePath, ext);
               const dirname = path.dirname(filePath);
@@ -101,15 +107,36 @@ program
             totalSaved += result.saved;
             totalOriginal += result.inputSize;
             processedCount++;
+
+            const savingPercent = result.inputSize > 0 ? ((result.saved / result.inputSize) * 100).toFixed(1) : '0.0';
+            const fileName = path.basename(filePath);
+            
+            // Print file progress above the bar
+            progressBar.stop();
+            console.log(
+              chalk.green('  ✓ ') + 
+              chalk.white(fileName.padEnd(25)) + 
+              chalk.dim(` saved ${savingPercent}%`)
+            );
+            progressBar.start(files.length, processedCount, { 
+              saved: (totalSaved / (1024 * 1024)).toFixed(2) 
+            });
           } catch (err: any) {
             failedCount++;
-            // We don't want to break the progress bar with console.error here
-            // but we might want to log it after the bar finishes
-          } finally {
-            progressBar.increment();
+            progressBar.stop();
+            console.log(chalk.red('  ✗ ') + chalk.white(path.basename(filePath)));
+            progressBar.start(files.length, processedCount, {
+              saved: (totalSaved / (1024 * 1024)).toFixed(2)
+            });
           }
-        })
-      );
+        }));
+      }
+
+      if (files.length === 0) {
+        progressBar.stop();
+        console.log(chalk.yellow('No images found to process.'));
+        return;
+      }
 
       await Promise.all(tasks);
       progressBar.stop();
@@ -118,7 +145,7 @@ program
       
       if (processedCount > 0) {
         const savedMB = (totalSaved / (1024 * 1024)).toFixed(2);
-        const percentSaved = ((totalSaved / totalOriginal) * 100).toFixed(1);
+        const percentSaved = totalOriginal > 0 ? ((totalSaved / totalOriginal) * 100).toFixed(1) : '0.0';
         console.log(chalk.green(`✓ Successfully processed ${processedCount} images.`));
         console.log(chalk.green(`Total space saved: ${savedMB} MB (${percentSaved}%)`));
       }

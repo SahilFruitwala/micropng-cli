@@ -1,6 +1,6 @@
 {
   "name": "micropng-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "High-performance CLI image compressor using sharp and libvips",
   "files": [
     "dist",
