@@ -1,4 +1,4 @@
-# MicroPng CLI (v0.2.2)
+# MicroPng CLI (v0.2.3)
 
 A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Supports recursive processing, atomic overwrites, and format conversion.
 
