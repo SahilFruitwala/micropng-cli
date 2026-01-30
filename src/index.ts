@@ -24,6 +24,8 @@ program
 
   .option('-f, --format <type>', 'Output format (jpeg, png, webp, avif)')
   .option('-c, --concurrency <number>', 'Number of concurrent tasks', '5')
+  .option('-i, --ignore <patterns...>', 'Ignore patterns (glob)')
+  .option('--keep-metadata', 'Keep image metadata (EXIF, etc.)', false)
   .action(async (input, options) => {
     try {
       const inputPath = path.resolve(input);
@@ -63,7 +65,10 @@ program
       // Start the progress bar in indeterminate mode while scanning
       progressBar.start(0, 0, { file: 'Scanning...', saved: '0.00' });
 
-      const stream = glob.stream(searchPattern, { absolute: true });
+      const stream = glob.stream(searchPattern, { 
+        absolute: true,
+        ignore: options.ignore 
+      });
       const tasks: Promise<void>[] = [];
 
       for await (const entry of stream) {
@@ -99,9 +104,9 @@ program
 
             const result = await compressImage(filePath, outputPath, {
               quality,
-
               format: options.format,
               replace: options.replace,
+              keepMetadata: options.keepMetadata,
             });
 
             totalSaved += result.saved;

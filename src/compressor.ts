@@ -8,6 +8,7 @@ export interface CompressionOptions {
 
   format?: 'jpeg' | 'png' | 'webp' | 'avif';
   replace?: boolean;
+  keepMetadata?: boolean;
 }
 
 export interface CompressionResult {
@@ -22,12 +23,16 @@ export async function compressImage(
   outputPath: string,
   options: CompressionOptions
 ): Promise<CompressionResult> {
-  const { quality = 80, format } = options;
+  const { quality = 80, format, keepMetadata } = options;
 
   const inputStats = await fs.stat(inputPath);
   const inputSize = inputStats.size;
 
   let pipeline = sharp(inputPath);
+
+  if (keepMetadata) {
+    pipeline = pipeline.withMetadata();
+  }
 
 
 

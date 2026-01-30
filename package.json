@@ -1,6 +1,6 @@
 {
-  "name": "@sahil_fruitwala/micropng-cli",
-  "version": "0.2.4",
+  "name": "micropng-cli",
+  "version": "0.3.0",
   "publishConfig": {
     "access": "public"
   },
@@ -15,7 +15,8 @@
   "description": "High-performance CLI image compressor using sharp and libvips",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "main": "index.js",
   "type": "module",

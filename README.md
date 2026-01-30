@@ -1,98 +1,92 @@
-# MicroPng CLI (v0.2.3)
+# MicroPng CLI (v0.3.0)
 
-A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Supports recursive processing, atomic overwrites, and format conversion.
+A high-performance, local-first CLI image compressor built with Node.js and libvips (via `sharp`). Designed for developers who need fast, reliable, and recursive image optimization without sending data to a cloud service.
 
-[![npm version](https://img.shields.io/npm/v/@sahil_fruitwala/micropng-cli.svg)](https://www.npmjs.com/package/@sahil_fruitwala/micropng-cli)
+[![npm version](https://img.shields.io/npm/v/micropng-cli.svg)](https://www.npmjs.com/package/micropng-cli)
 [![Build Status](https://github.com/SahilFruitwala/micropng-cli/actions/workflows/release.yml/badge.svg)](https://github.com/SahilFruitwala/micropng-cli/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+## 🚀 Features
 
-- 🚀 **Fast**: Parallel processing with smart concurrency control.
-- 📂 **Recursive**: Deeply scans folders and subfolders.
-- 🔄 **Safe Overwrite**: Atomic replacements to prevent data loss.
-- 🖼️ **Multi-Format**: Supports JPEG, PNG, WebP, AVIF.
-- 🔒 **Local-First**: No data leaves your machine.
+- **Blazing Fast**: Uses parallel processing with smart concurrency control to saturate your CPU without crashing.
+- **Deeply Recursive**: Scans folders and subfolders, maintaining your directory structure perfectly.
+- **Safety First**: Implements atomic overwrites using the `--replace` flag—original files are only replaced if the compressed version is actually smaller.
+- **Universal Formats**: Full support for JPEG, PNG, WebP, and AVIF conversion and compression.
+- **Local-First**: No data ever leaves your machine. Your privacy is guaranteed.
+- **Smarter Scanning**: Native support for ignore patterns to skip `node_modules`, `.git`, or specific assets.
+- **Metadata Control**: Choose whether to strip or keep EXIF information (GPS, camera settings, etc.).
 
-## Installation
+## 📦 Installation
 
-### For Users
-
-You can run **MicroPng** directly without installation using `npx`:
-
+### Global Installation
+Install it once and use the `micropng-cli` command anywhere:
 ```bash
-npx @sahil_fruitwala/micropng-cli --help
+npm install -g micropng-cli
 ```
 
-Or install it globally to use the `micropng` command anywhere:
-
+### Run without Installation
+Use `npx` to run it instantly without cluttering your system:
 ```bash
-npm install -g @sahil_fruitwala/micropng-cli
+npx micropng-cli --help
 ```
 
-### For Developers
+---
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for local development setup.
+## 🛠 Usage Examples
 
-## Usage
-
-### Basic Usage
-
-Compress a single file:
-
+### 1. Basic Compression
+Compress a single file and save it as a new file:
 ```bash
-micropng-cli input.png --output compressed.png
+micropng-cli input.png --output optimized.png
 ```
 
-Compress a directory of images:
-
+### 2. High-Performance Bulk Processing
+Optimize an entire directory and maintain the structure in an output folder:
 ```bash
-micropng-cli ./images --output ./compressed-images
+micropng-cli ./raw-assets --output ./dist/assets --recursive
 ```
 
-### Recursive Processing
-
-Process all images in a folder and its subfolders, maintaining the directory structure:
-
+### 3. Safe In-Place Replacement
+The most popular way to use MicroPng. This will search through your project and optimize all images, replacing them **only if** size is saved:
 ```bash
-micropng-cli ./photos --recursive --output ./optimized-photos
+micropng-cli ./src --recursive --replace --quality 85
 ```
 
-### In-Place Replacement (Overwrite)
-
-⚠️ **Warning**: This will replace your original files!
-
-Compress and overwrite images in-place safely:
-
+### 4. Advanced: Modern Web Formats
+Convert all images in a folder to WebP for modern web performance:
 ```bash
-micropng-cli ./project-assets --recursive --replace
+micropng-cli ./images --format webp --output ./webp-bundle --recursive
 ```
 
-### Format Conversion
-
-Convert all PNGs to WebP:
-
+### 5. Advanced: Complex Ignores
+Ignore specific directories or patterns while processing:
 ```bash
-micropng-cli ./images --format webp --output ./webp-images --recursive
+micropng-cli . --recursive --replace --ignore "node_modules/**" "**/previews/**" "*.tmp"
 ```
 
-### Options
+---
+
+## ⚙️ Options
 
 | Option | Alias | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `--output <dir>` | `-o` | Output directory | (Current dir) |
-| `--recursive` | `-r` | Process subfolders deeply | `false` |
-| `--replace` | | Overwrite original files | `false` |
-| `--quality <number>` | `-q` | Compression quality (1-100) | `80` |
+| `--output <dir>` | `-o` | Target directory for compressed files | (Current Dir) |
+| `--recursive` | `-r` | Deep scan folders and subfolders | `false` |
+| `--replace` | | Replace originals (Atomic safety enabled) | `false` |
+| `--quality <n>` | `-q` | Compression quality (1-100) | `80` |
+| `--format <type>` | `-f` | Output format (jpeg, png, webp, avif) | (Source Ext) |
+| `--concurrency <n>` | `-c` | Max simultaneous tasks | `5` |
+| `--ignore <glob>` | `-i` | Patterns to exclude (supports multiple) | - |
+| `--keep-metadata`| | Preserves EXIF/GPS/IPTC data | `false` |
 
-| `--format <type>` | `-f` | Output format (jpeg, png, webp, avif) | (Original) |
-| `--concurrency <number>` | `-c` | Number of concurrent tasks | `5` |
+---
 
-## Documentation
+## 📖 Additional Docs
 
--   [Contributing Guide](./CONTRIBUTING.md): Setup local dev environment and run tests.
--   [Distribution Guide](./DISTRIBUTION.md): How to publish and release this package.
+- **[Changelog](./CHANGELOG.md)**: See what's new in each version.
+- **[Contributing](./CONTRIBUTING.md)**: Learn how to set up the dev environment and add new features.
+- **[Distribution](./DISTRIBUTION.md)**: Details on the build and release pipeline.
 
-## License
+## ⚖️ License
 
-MIT
+MIT © Sahil Fruitwala

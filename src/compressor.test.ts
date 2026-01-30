@@ -102,4 +102,13 @@ describe('compressor.ts', () => {
     expect(newStats.size).toBe(originalStats.size);
     expect(newContent).toEqual(originalContent);
   });
+
+  it('should accept keepMetadata option', async () => {
+    const input = path.join(FIXTURES_DIR, 'test.png');
+    const output = path.join(TEST_DIR, 'metadata.png');
+    
+    // This should run without throwing
+    await expect(compressImage(input, output, { keepMetadata: true })).resolves.not.toThrow();
+    expect(await fs.pathExists(output)).toBe(true);
+  });
 });

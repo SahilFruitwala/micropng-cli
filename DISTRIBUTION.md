@@ -25,7 +25,7 @@ micropng-cli --help
 
 To remove the link:
 ```bash
-npm unlink -g @sahil_fruitwala/micropng-cli
+npm unlink -g micropng-cli
 ```
 
 ### 2. Global Install from Path
@@ -82,15 +82,15 @@ node ./dist/index.js --help
 
 After publishing, verify that the package is accessible:
 
-1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/@sahil_fruitwala/micropng-cli`.
+1.  **Check NPM Page**: Go to `https://www.npmjs.com/package/micropng-cli`.
 2.  **Test Installation**:
     ```bash
-    npm install -g @sahil_fruitwala/micropng-cli
+    npm install -g micropng-cli
     micropng-cli --version
     ```
 3.  **Test NPX**:
     ```bash
-    npx @sahil_fruitwala/micropng-cli --help
+    npx micropng-cli --help
     ```
 
 ## Automating with GitHub Actions
@@ -101,10 +101,10 @@ The distribution process is automated using GitHub Actions. The workflow is defi
 
 1.  **Continuous Integration**: Runs `npm test` on every push to `master` and all Pull Requests.
 2.  **Automated Publishing**: When you create a new **GitHub Release**, the workflow will:
-    -   Run tests.
-    -   Publish the package to **NPM**.
-    -   Build standalone binaries.
-    -   Attach the binaries to the GitHub Release.
+-   Test the code.
+-   Publish to NPM (using Trusted Publishing/OIDC).
+-   Build standalone binaries for Windows, Linux, and macOS.
+-   Attach those binaries to the GitHub Release.
 
 ### Setup Instructions
 
