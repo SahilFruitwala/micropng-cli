@@ -28,6 +28,9 @@ jobs:
     needs: test
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,9 +40,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Publish to NPM
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance --registry https://registry.npmjs.org
 
   publish-gpr:
     needs: test
@@ -76,7 +77,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Build Standalone Binaries
-        run: npm run build:bin -- --out-path ./binaries/
+        run: npx pkg . --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --out-path ./binaries/
       - name: Upload Binaries to Release
         uses: softprops/action-gh-release@v2
         with:
