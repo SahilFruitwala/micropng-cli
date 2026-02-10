@@ -3,6 +3,9 @@ import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 
+// Release memory after each file; critical for large batches (e.g. 1000+ images)
+sharp.cache(false);
+
 export interface CompressionOptions {
   quality?: number;
 

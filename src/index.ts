@@ -28,6 +28,17 @@ program
   .option('--keep-metadata', 'Keep image metadata (EXIF, etc.)', false)
   .action(async (input, options) => {
     try {
+      const quality = parseInt(options.quality, 10);
+      const concurrency = parseInt(options.concurrency, 10);
+      if (Number.isNaN(quality) || quality < 1 || quality > 100) {
+        console.error(chalk.red.bold('Error: --quality must be a number between 1 and 100.'));
+        process.exit(1);
+      }
+      if (Number.isNaN(concurrency) || concurrency < 1) {
+        console.error(chalk.red.bold('Error: --concurrency must be a positive number.'));
+        process.exit(1);
+      }
+
       const inputPath = path.resolve(input);
       const isDirectory = (await fs.stat(inputPath)).isDirectory();
 
@@ -58,9 +69,7 @@ program
       let processedCount = 0;
       let failedCount = 0;
 
-      const limit = pLimit(parseInt(options.concurrency));
-      const quality = parseInt(options.quality);
-
+      const limit = pLimit(concurrency);
 
       // Start the progress bar in indeterminate mode while scanning
       progressBar.start(0, 0, { file: 'Scanning...', saved: '0.00' });
@@ -84,16 +93,20 @@ program
             if (options.replace) {
               outputPath = filePath;
             } else if (options.output) {
-              const relativePath = isDirectory
-                ? path.relative(inputPath, filePath)
-                : path.basename(filePath);
-              
-              const baseDir = path.dirname(relativePath);
-              const ext = path.extname(relativePath);
-              const name = path.basename(relativePath, ext);
-              const targetExt = options.format ? `.${options.format}` : ext;
-              
-              outputPath = path.join(path.resolve(options.output), baseDir, `${name}${targetExt}`);
+              // Single file input with output path that looks like a file → use as output file path
+              const outputResolved = path.resolve(options.output);
+              if (!isDirectory && path.extname(outputResolved) !== '') {
+                outputPath = outputResolved;
+              } else {
+                const relativePath = isDirectory
+                  ? path.relative(inputPath, filePath)
+                  : path.basename(filePath);
+                const baseDir = path.dirname(relativePath);
+                const ext = path.extname(relativePath);
+                const name = path.basename(relativePath, ext);
+                const targetExt = options.format ? `.${options.format}` : ext;
+                outputPath = path.join(outputResolved, baseDir, `${name}${targetExt}`);
+              }
             } else {
               const ext = path.extname(filePath);
               const name = path.basename(filePath, ext);
@@ -158,8 +171,9 @@ program
       if (failedCount > 0) {
         console.log(chalk.red(`✗ Failed to process ${failedCount} images.`));
       }
-    } catch (err: any) {
-      console.error(chalk.red.bold(`Error: ${err.message}`));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(chalk.red.bold(`Error: ${message}`));
       process.exit(1);
     }
   });

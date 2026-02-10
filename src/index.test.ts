@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import path from 'path';
 import fs from 'fs-extra';
 // import { execa } from 'execa'; // We need execa for CLI integration tests - removed as unused
@@ -12,19 +12,20 @@ const TEST_DIR = path.resolve('it-test-dir');
 const CLI_PATH = path.resolve('dist/index.js');
 
 describe('CLI Integration', () => {
+  beforeAll(() => {
+    execSync('npm run build');
+  });
+
   beforeEach(async () => {
     await fs.ensureDir(TEST_DIR);
     await fs.ensureDir(path.join(TEST_DIR, 'nested'));
-    
+
     const createImg = (p: string) => sharp({
       create: { width: 10, height: 10, channels: 3, background: 'red' }
     }).png().toFile(p);
 
     await createImg(path.join(TEST_DIR, 'img1.png'));
     await createImg(path.join(TEST_DIR, 'nested', 'img2.png'));
-    
-    // Build the project first to ensure dist/index.js exists
-    execSync('npm run build');
   });
 
   afterEach(async () => {

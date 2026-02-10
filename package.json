@@ -18,7 +18,10 @@
     "README.md",
     "CHANGELOG.md"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "type": "module",
   "bin": {
     "micropng-cli": "./dist/index.js"

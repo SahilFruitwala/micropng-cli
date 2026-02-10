@@ -69,7 +69,7 @@ micropng-cli . --recursive --replace --ignore "node_modules/**" "**/previews/**"
 
 | Option | Alias | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `--output <dir>` | `-o` | Target directory for compressed files | (Current Dir) |
+| `--output <dir>` | `-o` | Target directory for compressed files; for a single file input, can be an output file path (e.g. `optimized.png`) | (Current Dir) |
 | `--recursive` | `-r` | Deep scan folders and subfolders | `false` |
 | `--replace` | | Replace originals (Atomic safety enabled) | `false` |
 | `--quality <n>` | `-q` | Compression quality (1-100) | `80` |
