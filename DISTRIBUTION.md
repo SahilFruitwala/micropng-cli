@@ -4,14 +4,15 @@ This guide describes how to publish and distribute the **MicroPng** CLI tool.
 
 ## Prerequisites
 
--   An **NPM** account (`npmjs.com`).
--   Access to the package name (if already published).
+- An **NPM** account (`npmjs.com`).
+- Access to the package name (if already published).
 
 ## Local Testing
 
 Before publishing to NPM, you can test the CLI tool locally using several methods:
 
 ### 1. NPM Link (Recommended)
+
 This makes the `micropng-cli` command available globally on your machine, pointing to your local development folder.
 
 ```bash
@@ -24,11 +25,13 @@ micropng-cli --help
 ```
 
 To remove the link:
+
 ```bash
 npm unlink -g micropng-cli
 ```
 
 ### 2. Global Install from Path
+
 Similar to `npm link`, but performs a full "install" of the local folder.
 
 ```bash
@@ -37,6 +40,7 @@ npm install -g .
 ```
 
 ### 3. Direct Execution with NPX
+
 Run the local version without installing it globally.
 
 ```bash
@@ -45,6 +49,7 @@ npx . --help
 ```
 
 ### 4. Direct Node Execution
+
 Useful for debugging specific scripts in `dist/`.
 
 ```bash
@@ -56,18 +61,21 @@ node ./dist/index.js --help
 
 1.  **Login to NPM**
     If you haven't logged in on your machine yet:
+
     ```bash
     npm login
     ```
 
 2.  **Update Version**
     Update the version number in `package.json` following Semantic Versioning (semver):
+
     ```bash
     npm version patch # or minor, major
     ```
 
 3.  **Build the Project**
     Ensure the `dist` folder is up-to-date. The `prepublishOnly` script in `package.json` handles this automatically, but you can run it manually:
+
     ```bash
     npm run build
     ```
@@ -101,23 +109,24 @@ The distribution process is automated using GitHub Actions. The workflow is defi
 
 1.  **Continuous Integration**: Runs `npm test` on every push to `master` and all Pull Requests.
 2.  **Automated Publishing**: When you create a new **GitHub Release**, the workflow will:
--   Test the code.
--   Publish to NPM (using Trusted Publishing/OIDC).
--   Build standalone binaries for Windows, Linux, and macOS.
--   Attach those binaries to the GitHub Release.
+
+- Test the code.
+- Publish to NPM (using Trusted Publishing/OIDC).
+- Build standalone binaries for Windows, Linux, and macOS.
+- Attach those binaries to the GitHub Release.
 
 ### Setup Instructions
 
 To enable automated publishing, follow these steps:
 
 1.  **Configure Trusted Publishing**:
-    -   Go to [npmjs.com](https://www.npmjs.com/) and navigate to your package settings.
-    -   Go to **Settings** > **Publishing access**.
-    -   Connect a **GitHub Actions** new publisher.
-    -   Select this repository (`SahilFruitwala/micropng-cli`) and the `release.yml` workflow file.
-    -   Ensure it's configured to publish from the `release` environment or relevant branch/tag rules.
+    - Go to [npmjs.com](https://www.npmjs.com/) and navigate to your package settings.
+    - Go to **Settings** > **Publishing access**.
+    - Connect a **GitHub Actions** new publisher.
+    - Select this repository (`SahilFruitwala/micropng-cli`) and the `release.yml` workflow file.
+    - Ensure it's configured to publish from the `release` environment or relevant branch/tag rules.
 2.  **No Secrets Needed**:
-    -   With Trusted Publishing, you **do not** need to add an `NPM_TOKEN` to your GitHub secrets. The workflow authenticates securely using OIDC.
+    - With Trusted Publishing, you **do not** need to add an `NPM_TOKEN` to your GitHub secrets. The workflow authenticates securely using OIDC.
 
 ### Triggering a Release
 
@@ -126,3 +135,30 @@ To enable automated publishing, follow these steps:
 3.  Click **Draft a new release**.
 4.  Create a new tag (e.g., `v0.1.0`) and publish the release.
 5.  GitHub Actions will handle the rest!
+
+## Homebrew Distribution
+
+MicroPng can be distributed via a [Homebrew Tap](https://docs.brew.sh/Taps).
+
+### 1. Create a Tap Repository
+
+Create a new GitHub repository named `homebrew-tap`.
+
+### 2. Add the Formula
+
+Move the provided `Formula/micropng-cli.rb` into your `homebrew-tap` repository under the same `Formula/` directory.
+
+### 3. Updating the Formula
+
+Every time you publish a new version to NPM:
+
+1.  Run `npm pack` to generate the new tarball.
+2.  Run `shasum -a 256 <filename>.tgz` to get the new SHA256.
+3.  Update the `url` and `sha256` in `Formula/micropng-cli.rb`.
+4.  Commit and push the changes to your `homebrew-tap` repository.
+
+Users will then be able to install it using:
+
+```bash
+brew install SahilFruitwala/tap/micropng-cli
+```

@@ -26,6 +26,14 @@ Install it once and use the `micropng-cli` command anywhere:
 npm install -g micropng-cli
 ```
 
+### Homebrew Installation (macOS & Linux)
+
+If you prefer Homebrew, you can install it via:
+
+```bash
+brew install SahilFruitwala/tap/micropng-cli
+```
+
 ### Run without Installation
 
 Use `npx` to run it instantly without cluttering your system:
