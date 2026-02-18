@@ -3,8 +3,8 @@ require "language/node"
 class MicropngCli < Formula
   desc "High-performance CLI image compressor using sharp and libvips"
   homepage "https://github.com/SahilFruitwala/micropng-cli"
-  url "https://registry.npmjs.org/micropng-cli/-/micropng-cli-0.3.1.tgz"
-  sha256 "70e84ea7fa076fdf2c2be881fe60eb9426dc3456f63db53f2135ca956b06031d"
+  url "https://registry.npmjs.org/micropng-cli/-/micropng-cli-0.4.0.tgz"
+  sha256 "e5206d150834527c0b4fcb4c3027e2121358fa903b1ad418172d3605a33b148c"
   license "MIT"
 
   depends_on "node"
