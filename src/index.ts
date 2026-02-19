@@ -28,6 +28,7 @@ program
   .option("-f, --format <type>", "Output format (jpeg, png, webp, avif)")
   .option("-c, --concurrency <number>", "Number of concurrent tasks", "5")
   .option("-i, --ignore <patterns...>", "Ignore patterns (glob)")
+  .option("-s, --size <string>", "Target size (e.g. 500kb, 1mb)")
   .option("--keep-metadata", "Keep image metadata (EXIF, etc.)", false)
   .action(async (input, options) => {
     try {
@@ -100,6 +101,16 @@ program
       if (Number.isNaN(concurrency) || concurrency < 1) {
         console.error(
           chalk.red.bold("Error: --concurrency must be a positive number."),
+        );
+        process.exit(1);
+      }
+
+      const targetSize = options.size ? parseSize(options.size) : undefined;
+      if (options.size && targetSize === undefined) {
+        console.error(
+          chalk.red.bold(
+            "Error: --size must be a valid size (e.g. 500kb, 1mb).",
+          ),
         );
         process.exit(1);
       }
@@ -196,6 +207,7 @@ program
                 format: options.format,
                 replace: options.replace,
                 keepMetadata: options.keepMetadata,
+                targetSize,
               });
 
               totalSaved += result.saved;
@@ -210,10 +222,11 @@ program
 
               // Print file progress above the bar
               progressBar.stop();
+              const sizeInfo = `${formatSize(result.inputSize)} -> ${formatSize(result.outputSize)}`;
               console.log(
                 chalk.green("  ✓ ") +
                   chalk.white(fileName.padEnd(25)) +
-                  chalk.dim(` saved ${savingPercent}%`),
+                  chalk.dim(` ${sizeInfo} | saved ${savingPercent}%`),
               );
               progressBar.start(files.length, processedCount, {
                 saved: (totalSaved / (1024 * 1024)).toFixed(2),
@@ -244,7 +257,7 @@ program
       console.log(chalk.bold.cyan("\nCompression complete!"));
 
       if (processedCount > 0) {
-        const savedMB = (totalSaved / (1024 * 1024)).toFixed(2);
+        const savedSizeFormatted = formatSize(totalSaved);
         const percentSaved =
           totalOriginal > 0
             ? ((totalSaved / totalOriginal) * 100).toFixed(1)
@@ -253,7 +266,7 @@ program
           chalk.green(`✓ Successfully processed ${processedCount} images.`),
         );
         console.log(
-          chalk.green(`Total space saved: ${savedMB} MB (${percentSaved}%)`),
+          chalk.green(`Total space saved: ${savedSizeFormatted} (${percentSaved}%)`),
         );
       }
 
@@ -268,3 +281,34 @@ program
   });
 
 program.parse(process.argv);
+
+function parseSize(sizeStr: string): number | undefined {
+  const match = sizeStr.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?$/);
+  if (!match) return undefined;
+
+  const value = parseFloat(match[1]);
+  const unit = (match[2] || "b").toLowerCase();
+
+  switch (unit) {
+    case "k":
+    case "kb":
+      return value * 1024;
+    case "m":
+    case "mb":
+      return value * 1024 * 1024;
+    case "g":
+    case "gb":
+      return value * 1024 * 1024 * 1024;
+    default:
+      return value;
+  }
+}
+
+function formatSize(bytes: number): string {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
+

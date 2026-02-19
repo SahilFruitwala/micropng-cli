@@ -8,10 +8,10 @@ sharp.cache(false);
 
 export interface CompressionOptions {
   quality?: number;
-
   format?: 'jpeg' | 'png' | 'webp' | 'avif';
   replace?: boolean;
   keepMetadata?: boolean;
+  targetSize?: number;
 }
 
 export interface CompressionResult {
@@ -26,40 +26,76 @@ export async function compressImage(
   outputPath: string,
   options: CompressionOptions
 ): Promise<CompressionResult> {
-  const { quality = 80, format, keepMetadata } = options;
+  const { quality: defaultQuality = 80, format, keepMetadata, targetSize } = options;
 
   const inputStats = await fs.stat(inputPath);
   const inputSize = inputStats.size;
 
-  let pipeline = sharp(inputPath);
-
+  let basePipeline = sharp(inputPath);
   if (keepMetadata) {
-    pipeline = pipeline.withMetadata();
+    basePipeline = basePipeline.withMetadata();
   }
-
-
 
   // Determine target format
   const ext = path.extname(inputPath).toLowerCase();
   const targetFormat = format || (ext.slice(1) as any);
 
-  if (targetFormat === 'jpeg' || targetFormat === 'jpg') {
-    pipeline = pipeline.jpeg({ quality });
-  } else if (targetFormat === 'png') {
-    pipeline = pipeline.png({ quality, compressionLevel: 9 });
-  } else if (targetFormat === 'webp') {
-    pipeline = pipeline.webp({ quality });
-  } else if (targetFormat === 'avif') {
-    pipeline = pipeline.avif({ quality });
+  const getCompressedBuffer = async (q: number) => {
+    let pipeline = basePipeline.clone();
+    if (targetFormat === 'jpeg' || targetFormat === 'jpg') {
+      pipeline = pipeline.jpeg({ quality: q, mozjpeg: true });
+    } else if (targetFormat === 'png') {
+      pipeline = pipeline.png({ quality: q, compressionLevel: 9, palette: true });
+    } else if (targetFormat === 'webp') {
+      pipeline = pipeline.webp({ quality: q });
+    } else if (targetFormat === 'avif') {
+      pipeline = pipeline.avif({ quality: q });
+    }
+    return pipeline.toBuffer();
+  };
+
+  let finalBuffer: Buffer;
+  let finalQuality = defaultQuality;
+
+  if (targetSize && targetSize > 0) {
+    let minQ = 1;
+    let maxQ = 100;
+    let bestQ = 1;
+    let minSizeVal = Infinity;
+    let minSizeQ = 1;
+
+    while (minQ <= maxQ) {
+      const midQ = Math.floor((minQ + maxQ) / 2);
+      const buf = await getCompressedBuffer(midQ);
+      const size = buf.length;
+
+      if (size < minSizeVal) {
+        minSizeVal = size;
+        minSizeQ = midQ;
+      }
+
+      if (size <= targetSize) {
+        bestQ = midQ;
+        minQ = midQ + 1;
+      } else {
+        maxQ = midQ - 1;
+      }
+    }
+    finalQuality = bestQ || minSizeQ;
+    finalBuffer = await getCompressedBuffer(finalQuality);
+  } else {
+    finalBuffer = await getCompressedBuffer(defaultQuality);
   }
+
+  const outputSize = finalBuffer.length;
 
   // Handle in-place replacement safety
   const finalOutputPath = options.replace ? `${inputPath}.tmp_${Date.now()}` : outputPath;
 
   try {
     await fs.ensureDir(path.dirname(finalOutputPath));
-    const info = await pipeline.toFile(finalOutputPath);
-    const outputSize = info.size;
+    await fs.writeFile(finalOutputPath, finalBuffer);
+    
     let replaced = false;
 
     if (options.replace) {

@@ -76,4 +76,23 @@ describe('CLI Integration', () => {
     expect(fs.existsSync(path.join(outputDir, 'img1.png'))).toBe(true);
     expect(fs.existsSync(path.join(outputDir, 'nested', 'img2.png'))).toBe(false);
   });
+
+  it('should handle target size constraint', async () => {
+    const outputDir = path.resolve('it-output');
+    
+    // Create a larger image for testing size constraint
+    const largeImgPath = path.join(TEST_DIR, 'large.png');
+    await sharp({
+      create: { width: 1000, height: 1000, channels: 3, background: 'blue' }
+    }).png().toFile(largeImgPath);
+    
+    // Request a size much smaller than original
+    execSync(`node ${CLI_PATH} ${largeImgPath} --output ${outputDir} --size 50kb`);
+    
+    const compressedPath = path.join(outputDir, 'large.png');
+    expect(fs.existsSync(compressedPath)).toBe(true);
+    const compressedSize = fs.statSync(compressedPath).size;
+    // 50kb is the target. Binary search should find something close to or under it.
+    expect(compressedSize).toBeLessThanOrEqual(51200); 
+  });
 });

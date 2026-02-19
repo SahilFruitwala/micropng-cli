@@ -15,6 +15,7 @@ A high-performance, local-first CLI image compressor built with Node.js and libv
 - **Smarter Scanning**: Native support for ignore patterns to skip `node_modules`, `.git`, or specific assets.
 - **Metadata Control**: Choose whether to strip or keep EXIF information (GPS, camera settings, etc.).
 - **Interactive Mode**: Automatically guides you through destination selection if flags are missing.
+- **Target Size Compression**: Specifically compress images to stay under a specific file size (e.g., `--size 500kb`).
 
 ## 📦 Installation
 
@@ -94,7 +95,15 @@ Tune concurrency for massive datasets or keep photographic memories intact:
 micropng-cli ./photos --keep-metadata --concurrency 20 --recursive
 ```
 
-### 7. Guided Setup (Interactive)
+### 7. Advanced: Target File Size
+
+Compress images to be under a specific size (uses intelligent binary search for quality tuning):
+
+```bash
+micropng-cli input.jpg --output target.jpg --size 500kb
+```
+
+### 8. Guided Setup (Interactive)
 
 Don't want to remember flags? Just point to a folder and MicroPng will guide you:
 
@@ -117,6 +126,7 @@ _This will open an interactive menu to choose between custom output, suffix mode
 | `--format <type>`   | `-f`  | Output format (jpeg, png, webp, avif)                                                                             | (Source Ext)  |
 | `--concurrency <n>` | `-c`  | Max simultaneous tasks                                                                                            | `5`           |
 | `--ignore <glob>`   | `-i`  | Patterns to exclude (supports multiple)                                                                           | -             |
+| `--size <string>`   | `-s`  | Target file size (e.g. `500kb`, `1mb`)                                                                            | -             |
 | `--keep-metadata`   |       | Preserves EXIF/GPS/IPTC data                                                                                      | `false`       |
 
 ---
